@@ -6,6 +6,9 @@ const bcrypt = require('bcrypt')
 const config = require('config')
 const jwt = require('jsonwebtoken')
 
+/**
+ * ger authenticated user
+ */
 router.get('/me', async (req,res)=>{
     try {
        const user = await User.findById(req.user._id).select("-password")
@@ -18,6 +21,9 @@ router.get('/me', async (req,res)=>{
     }
 })
 
+/**
+ * create user
+ */
 router.post('/', async (req, res) => {
     try {
         const {error} = validate(req.body)

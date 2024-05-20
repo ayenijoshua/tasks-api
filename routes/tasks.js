@@ -6,11 +6,17 @@ const mongoose = require('mongoose');
 const validateObjectId = require('../middlewares/validateObjectId')
 const auth = require('../middlewares/authMiddleware')
 
+/**
+ * get all tasks
+ */
 router.get('/', async (req, res) => {
     const tasks = await Genre.find().sort('name')
     res.send(tasks);
 });
 
+/**
+ * create task
+ */
 router.post('/', auth, async (req, res) => {
     try {
         const { error } = validate(req.body); 
@@ -26,6 +32,9 @@ router.post('/', auth, async (req, res) => {
   
 });
 
+/**
+ * update task
+ */
 router.put('/:id', async (req, res) => {
     try {
         const {error} = validate(req.body)
@@ -46,6 +55,9 @@ router.put('/:id', async (req, res) => {
     }
 });
 
+/**
+ * delete task
+ */
 router.delete('/:id', async (req, res) => {
     try {
         const task = await Task.findByIdAndRemove(req.params.id)
@@ -60,6 +72,9 @@ router.delete('/:id', async (req, res) => {
     
 });
 
+/**
+ * get task
+ */
 router.get('/:id', validateObjectId, async (req, res) => {
     try {
         if(!mongoose.Types.ObjectId.isValid(req.params.id)){
