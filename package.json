@@ -1,10 +1,13 @@
 {
-  "name": "genres-api",
+  "name": "tasks-api",
   "version": "1.0.0",
-  "description": "a simple genres api",
+  "description": "a simple tasks api",
   "main": "index.js",
   "scripts": {
-    "test": "jest --env=node  --watchAll --verbose --coverage"
+    "test": "jest --env=node  --watchAll --verbose --coverage",
+    "dev": "nodemon index.js  export NODE_ENV=test; node ./",
+    "start": "export NODE_ENV=test; node ./ node index.js",
+    "seed": "node"
   },
   "author": "Joshua Ayeni",
   "license": "ISC",
@@ -23,6 +26,7 @@
     "mongoose": "^5.0.1",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.15",
+    "socket.io": "^4.7.5",
     "winston": "^2.4.0",
     "winston-mongodb": "^3.0.0"
   },

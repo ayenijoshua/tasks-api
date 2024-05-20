@@ -1,12 +1,18 @@
-version: '3'
+version: "3.7"
 services:
   app:
-    container_name: docker-mongo-demo1
+    container_name: nodejs
     restart: always
-    build: .
+    build:
+      context: /
+      dockerfile: Dockerfile
+      #restart: unless-stopped
+      #working_dir: /usr/src/app
+    #command:
+      #export NODE_ENV=test; node ./
     ports:
-      - '5500:5500'
-    external_links:
+      - '3000:3000'
+    depends_on: 
       - mongo
 
   mongo:

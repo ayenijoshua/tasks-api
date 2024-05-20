@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {User,validate} = require('../models/user')
+const {User,validate,validateLogin} = require('../models/user')
 const _ = require('lodash')
 const bcrypt = require('bcrypt')
 const config = require('config')
@@ -13,6 +13,8 @@ router.get('/me', async (req,res)=>{
     try {
        const user = await User.findById(req.user._id).select("-password")
        if(!user) return res.status(404).send("authnticated user not found")
+
+       user.token = jwt.sign({_id:user._id}, config.get('jwtPrivateKey'))
 
        return res.send(user)
     } catch (error) {
@@ -44,6 +46,30 @@ router.post('/', async (req, res) => {
         user.password = await bcrypt.hash(user.password,salt)
 
         await user.save()
+
+        const token = jwt.sign({_id:user._id}, config.get('jwtPrivateKey'))
+
+        return res.header('x-auth-token',token).send(_.pick(user,['name','email']))
+
+    } catch (error) {
+        console.error('Error',error)
+        return res.status(500).send("An internal error occured")
+    }
+    
+});
+
+router.post('/login', async (req, res) => {
+    try {
+        const {error} = validateLogin(req.body)
+        if(error) return res.status(400).send(error.details[0].message)
+
+        let user = await User.findOne({email:req.body.email})
+        if(!user) return res.status(400).send("User does not exist")
+        
+       let check = await bcrypt.compare(user.password,user.password)
+       if(!check){
+            return res.status(400).send("User does not exist")
+       }
 
         const token = jwt.sign({_id:user._id}, config.get('jwtPrivateKey'))
 

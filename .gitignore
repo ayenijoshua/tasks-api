@@ -3,3 +3,4 @@ logs/
 coverage/
 config/
 ^config/test.json
+data/
